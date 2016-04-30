@@ -4,7 +4,7 @@
 #
 Name     : libxkbcommon
 Version  : 0.6.1
-Release  : 2
+Release  : 3
 URL      : http://xkbcommon.org/download/libxkbcommon-0.6.1.tar.xz
 Source0  : http://xkbcommon.org/download/libxkbcommon-0.6.1.tar.xz
 Summary  : XKB API common to servers and clients
