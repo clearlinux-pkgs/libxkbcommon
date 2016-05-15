@@ -4,14 +4,17 @@
 #
 Name     : libxkbcommon
 Version  : 0.6.1
-Release  : 3
+Release  : 4
 URL      : http://xkbcommon.org/download/libxkbcommon-0.6.1.tar.xz
 Source0  : http://xkbcommon.org/download/libxkbcommon-0.6.1.tar.xz
 Summary  : XKB API common to servers and clients
 Group    : Development/Tools
 License  : MIT
 Requires: libxkbcommon-lib
+Requires: libxkbcommon-doc
 BuildRequires : bison
+BuildRequires : doxygen
+BuildRequires : graphviz
 BuildRequires : pkgconfig(xcb)
 BuildRequires : pkgconfig(xcb-xkb)
 BuildRequires : pkgconfig(xkeyboard-config)
@@ -34,6 +37,14 @@ Provides: libxkbcommon-devel
 dev components for the libxkbcommon package.
 
 
+%package doc
+Summary: doc components for the libxkbcommon package.
+Group: Documentation
+
+%description doc
+doc components for the libxkbcommon package.
+
+
 %package lib
 Summary: lib components for the libxkbcommon package.
 Group: Libraries
@@ -43,7 +54,6 @@ lib components for the libxkbcommon package.
 
 
 %prep
-cd ..
 %setup -q -n libxkbcommon-0.6.1
 
 %build
@@ -73,6 +83,10 @@ rm -rf %{buildroot}
 /usr/include/xkbcommon/xkbcommon.h
 /usr/lib64/*.so
 /usr/lib64/pkgconfig/*.pc
+
+%files doc
+%defattr(-,root,root,-)
+%doc /usr/share/doc/libxkbcommon/*
 
 %files lib
 %defattr(-,root,root,-)
