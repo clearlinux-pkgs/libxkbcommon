@@ -4,7 +4,7 @@
 #
 Name     : libxkbcommon
 Version  : 0.7.2
-Release  : 10
+Release  : 11
 URL      : http://xkbcommon.org/download/libxkbcommon-0.7.2.tar.xz
 Source0  : http://xkbcommon.org/download/libxkbcommon-0.7.2.tar.xz
 Summary  : XKB API common to servers and clients - X11 support
