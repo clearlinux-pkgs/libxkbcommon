@@ -1,0 +1,8 @@
+0.8.0
+graphviz
+pkgconfig(xkeyboard-config)
+doxygen
+pkg-config
+bison
+pkgconfig(32xorg-macros)
+pkgconfig(xorg-macros)
