@@ -1,3 +1,40 @@
+libxkbcommon 0.8.1 - 2018-08-03
+==================
+
+- Fix various problems found in the meson build (see commit messages for more
+  details):
+
+    - Fix compilation on Darwin.
+
+    - Fix compilation of the x11 tests and demos when XCB is installed in a
+      non-standard location.
+
+    - Fix xkbcommon-x11.pc missing the Requires specification.
+
+- Fix various problems found with fuzzing and Coverity (see commit messages for
+  more details):
+
+    - Fix stack overflow in the XKB text format parser when evaluating boolean
+      negation.
+
+    - Fix NULL-dereferences in the XKB text format parser when some unsupported
+      tokens appear (the tokens are still parsed for backward compatibility).
+
+    - Fix NULL-dereference in the XKB text format parser when parsing an
+      xkb_geometry section.
+
+    - Fix an infinite loop in the Compose text format parser on some inputs.
+
+    - Fix an invalid free() when using multiple keysyms.
+
+- Replace the Unicode characters for the leftanglebracket and rightanglebracket
+  keysyms from the deprecated LEFT/RIGHT-POINTING ANGLE BRACKET to
+  MATHEMATICAL LEFT/RIGHT ANGLE BRACKET.
+
+- Reject out-of-range Unicode codepoints in xkb_keysym_to_utf8 and
+  xkb_keysym_to_utf32.
+
+
 libxkbcommon 0.8.0 - 2017-12-15
 ==================
 
@@ -17,6 +54,7 @@ libxkbcommon 0.8.0 - 2017-12-15
 - New API:
   xkb_keysym_to_upper()
   xkb_keysym_to_lower()
+
 
 libxkbcommon 0.7.2 - 2017-08-04
 ==================
@@ -241,7 +279,7 @@ libxkbcommon 0.4.1 - 2014-03-27
   is converted to an appropriate control character.
   This matches the behavior of libX11's XLookupString(3), and
   required by the XKB specification:
-  http://www.x.org/releases/current/doc/kbproto/xkbproto.html#Interpreting_the_Control_Modifier
+  https://www.x.org/releases/current/doc/kbproto/xkbproto.html#Interpreting_the_Control_Modifier
 
   https://bugs.freedesktop.org/show_bug.cgi?id=75892
 
@@ -304,7 +342,7 @@ libxkbcommon 0.3.2 - 2013-11-22
 - Apply capitalization transformation on keysyms in
   xkb_keysym_get_one_sym(), to match the behavior specified in the XKB
   specification:
-  http://www.x.org/releases/current/doc/kbproto/xkbproto.html#Interpreting_the_Lock_Modifier
+  https://www.x.org/releases/current/doc/kbproto/xkbproto.html#Interpreting_the_Lock_Modifier
 
 - Support byacc for generating the parser, in addition to Bison.
 
