@@ -1,2 +1,8 @@
 # This file contains additional build requirements that did not get
 # picked up automatically. One name per line, no whitespace.
+libX11-lib
+libX11-lib32
+wayland-dev
+wayland-dev32
+wayland-protocols-dev
+wayland-protocols-dev32
