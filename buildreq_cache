@@ -1,8 +1,13 @@
-0.8.4
+0.9.1
 bison
 doxygen
 graphviz
 pkg-config
+pkgconfig(32xcb)
+pkgconfig(32xcb-xkb)
 pkgconfig(32xorg-macros)
+pkgconfig(xcb)
+pkgconfig(xcb-xkb)
 pkgconfig(xkeyboard-config)
 pkgconfig(xorg-macros)
+util-linux
