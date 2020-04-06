@@ -4,7 +4,7 @@
 #
 Name     : libxkbcommon
 Version  : 0.9.1
-Release  : 20
+Release  : 21
 URL      : http://xkbcommon.org/download/libxkbcommon-0.9.1.tar.xz
 Source0  : http://xkbcommon.org/download/libxkbcommon-0.9.1.tar.xz
 Summary  : Keymap handling library for toolkits and window systems
