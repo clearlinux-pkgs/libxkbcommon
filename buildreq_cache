@@ -1,13 +1,11 @@
-0.9.1
+1.0.1
 bison
 doxygen
-graphviz
-pkg-config
+pkgconfig(32libxml-2.0)
 pkgconfig(32xcb)
 pkgconfig(32xcb-xkb)
-pkgconfig(32xorg-macros)
+pkgconfig(libxml-2.0)
 pkgconfig(xcb)
 pkgconfig(xcb-xkb)
 pkgconfig(xkeyboard-config)
-pkgconfig(xorg-macros)
-util-linux
+valgrind

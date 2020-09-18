@@ -1,3 +1,213 @@
+libxkbcommon 1.0.1 - 2020-09-11
+==================
+
+- Fix the tool-option-parsing test failing.
+
+- Remove requirement for pytest in the tool-option-parsing test.
+
+- Make the table output of `xkbcli how-to-type` aligned.
+
+- Some portability and test isolation fixes.
+
+libxkbcommon 1.0.0 - 2020-09-05
+==================
+
+Note: this release is API and ABI compatible with previous releases -- the
+major version bump is only an indication of stability.
+
+- Add libxkbregistry as configure-time optional library. libxkbregistry is a C
+  library that lists available XKB models, layouts and variants for a given
+  ruleset. This is a separate library (libxkbregistry.so, pkgconfig file
+  xkbregistry.pc) and aimed at tools that provide a listing of available
+  keyboard layouts to the user. See the Documentation for details on the API.
+
+  Contributed by Peter Hutterer <@who-t.net>.
+
+- Better support custom user configuration:
+
+    * Allow including XKB files from other paths.
+
+      Previously, a 'symbols/us' file in path A would shadow the same file in
+      path B. This is suboptimal, we rarely need to hide the system files - we
+      care mostly about *extending* them. By continuing to check other lookup
+      paths, we make it possible for a XDG_CONFIG_HOME/xkb/symbols/us file to
+      have sections including those from /usr/share/X11/xkb/symbols/us.
+
+      Note that this is not possible for rules files, which need to be manually
+      controlled to get the right bits resolved.
+
+    * Add /etc/xkb as extra lookup path for system data files.
+
+      This completes the usual triplet of configuration locations available for
+      most processes:
+      - vendor-provided data files in /usr/share/X11/xkb
+      - system-specific data files in /etc/xkb
+      - user-specific data files in $XDG_CONFIG_HOME/xkb
+
+      The default lookup order user, system, vendor, just like everything else
+      that uses these conventions.
+
+      For include directives in rules files, the '%E' resolves to that path.
+
+    * Add a new section to the documentation for custom user configuration.
+
+  Contributed by Peter Hutterer <@who-t.net>.
+
+- Add an `xkbcli` command-line utility.
+
+  This tool offers various subcommands for introspection and debugging.
+  Currently the available subcommands are:
+
+  list
+    List available rules, models, layouts, variants and options
+
+  interactive-wayland
+    Interactive debugger for XKB keymaps for Wayland
+
+  interactive-x11
+    Interactive debugger for XKB keymaps for X11
+
+  interactive-evdev
+    Interactive debugger for XKB keymaps for evdev (Linux)
+
+  compile-keymap
+    Compile an XKB keymap
+
+  how-to-type
+    See separate entry below.
+
+  See the manpages for usage information.
+
+  Contributed by Peter Hutterer <@who-t.net>.
+
+- Add `xkb_utf32_to_keysym()` to translate a Unicode codepoint to a keysym.
+  When a special keysym (`XKB_KEY_` constant) for the codepoint exists, it is
+  returned, otherwise the direct encoding is used, if permissible.
+
+  Contributed by Jaroslaw Kubik <@froglogic.com>.
+
+- Add `xkb_keymap_key_get_mods_for_level()` which retrieves sets of modifiers
+  which produce a given shift level in a given key+layout.
+
+  Contributed by Jaroslaw Kubik <@froglogic.com>.
+
+- Add `xkbcli how-to-type` command, which, using `xkb_utf32_to_keysym()`
+  and `xkb_keymap_key_get_mods_for_level()` and other APIs, prints out all
+  the ways to produce a given keysym.
+
+  For example, how to type `?` (codepoint 63) in a us,de keymap?
+
+    $ xkbcli how-to-type --layout us,de 63 | column -ts $'\t'
+    keysym: question (0x3f)
+    KEYCODE  KEY NAME  LAYOUT#  LAYOUT NAME   LEVEL#  MODIFIERS
+    20       AE11      2        German        2       [ Shift ]
+    20       AE11      2        German        2       [ Shift Lock ]
+    61       AB10      1        English (US)  2       [ Shift ]
+
+- Add a new section to the documentation describing the format of the XKB
+  rules file.
+
+- Search for Compose in $XDG_CONFIG_HOME/XCompose (fallback to
+  ~/.config/XCompose) before trying $HOME/.XCompose.
+
+  Note that libX11 still only searches in $HOME/.XCompose.
+
+  Contributed by Emmanuel Gil Peyrot <@linkmauve.fr>.
+
+- Bump meson requirement to >= 0.49.0.
+
+- Fix build with byacc.
+
+- Fix building X11 tests on PE targets.
+
+  Contributed by Jon Turney <@dronecode.org.uk>
+
+- The tests no longer rely on bash, only Python (which is already used by
+  meson).
+
+- New API:
+  xkb_utf32_to_keysym
+  xkb_keymap_key_get_mods_for_level
+  XKB_KEY_XF86FullScreen
+
+
+libxkbcommon 0.10.0 - 2020-01-18
+===================
+
+- (security) Fix quadratic complexity in the XKB file parser. See commit
+  message 7c42945e04a2107827a057245298dedc0475cc88 for details.
+
+- Add $XDG_CONFIG_HOME/xkb to the default search path. If $XDG_CONFIG_HOME
+  is not set, $HOME/.config/xkb is used. If $HOME is not set, the path is not
+  added.
+
+  The XDG path is looked up before the existing default search path $HOME/.xkb.
+
+  Contributed by Peter Hutterer <@who-t.net>.
+
+- Add support for include statements in XKB rules files.
+
+  This is a step towards making local XKB customizations more tenable and
+  convenient, without modifying system files.
+
+  You can now include other rules files like this:
+
+      ! include %S/evdev
+
+  Two directives are supported, %H to $HOME and %S for the system-installed
+  rules directory (usually /usr/share/X11/xkb/rules).
+
+  See commit message ca033a29d2ca910fd17b1ae287cb420205bdddc8 and
+  doc/rules-format.txt in the xkbcommon source code for more information.
+
+  Contributed by Peter Hutterer <@who-t.net>.
+
+- Downgrade "Symbol added to modifier map for multiple modifiers" log to a
+  warning.
+
+  This error message was too annoying to be shown by default. When working on
+  keymaps, set `XKB_LOG_LEVEL=debug XKB_LOG_VERBOSITY=10` to see all possible
+  messages.
+
+- Support building on Windows using the meson MSVC backend.
+
+  Contributed by Adrian Perez de Castro <@igalia.com>.
+
+- Fix bug where the merge mode only applied to the first vmod in a
+  `virtual_modifiers` statement. Given
+
+      augment virtual_modifiers NumLock,Alt,LevelThree
+
+  Previously it was incorrectly treated as
+
+      augment virtual_modifiers NumLock;
+      virtual_modifiers Alt;
+      virtual_modifiers LevelThree;
+
+  Now it is treated as
+
+      augment virtual_modifiers NumLock;
+      augment virtual_modifiers Alt;
+      augment virtual_modifiers LevelThree;
+
+- Reject interpret modifier predicate with more than one value. Given
+
+      interpret ISO_Level3_Shift+AnyOf(all,extraneous) { ... };
+
+  Previously, extraneous (and further) was ignored. Now it's rejected.
+
+- Correctly handle capitalization of the ssharp keysym.
+
+- Speed up and improve the internal `xkeyboard-config` tool. This tool
+  compiles all layout/variant combinations in the xkeyboard-config dataset
+  and reports any issues it finds.
+
+  Contributed by Peter Hutterer <@who-t.net>.
+
+- Speed up "atoms" (string interning). This code goes back at least to X11R1
+  (released 1987).
+
+
 libxkbcommon 0.9.1 - 2019-10-19
 ==================
 

@@ -1,2 +1,4 @@
 libX11.so.6
 libc.so.6
+libwayland-client.so.0
+libxml2.so.2
