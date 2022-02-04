@@ -1,5 +1,5 @@
 PKG_NAME := libxkbcommon
-URL = https://xkbcommon.org/download/libxkbcommon-1.3.1.tar.xz
+URL = https://xkbcommon.org/download/libxkbcommon-1.4.0.tar.xz
 ARCHIVES = 
 
 include ../common/Makefile.common
