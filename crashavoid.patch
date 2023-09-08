@@ -1,0 +1,13 @@
+--- libxkbcommon-1.5.0/src/state.c~	2023-01-02 19:23:30.000000000 +0000
++++ libxkbcommon-1.5.0/src/state.c	2023-09-08 20:41:38.841617381 +0000
+@@ -1295,6 +1295,10 @@
+ XKB_EXPORT int
+ xkb_state_led_index_is_active(struct xkb_state *state, xkb_led_index_t idx)
+ {
++	if (!state)
++		return -1;
++	if (!state->keymap)
++		return -1;
+     if (idx >= state->keymap->num_leds ||
+         state->keymap->leds[idx].name == XKB_ATOM_NONE)
+         return -1;
