@@ -11,3 +11,60 @@
      if (idx >= state->keymap->num_leds ||
          state->keymap->leds[idx].name == XKB_ATOM_NONE)
          return -1;
+--- libxkbcommon-1.5.0/src/state.c~	2023-09-08 20:41:38.000000000 +0000
++++ libxkbcommon-1.5.0/src/state.c	2023-09-08 21:00:32.440986492 +0000
+@@ -1299,6 +1299,8 @@
+ 		return -1;
+ 	if (!state->keymap)
+ 		return -1;
++	if (!state->keymap->leds)
++		return -1;
+     if (idx >= state->keymap->num_leds ||
+         state->keymap->leds[idx].name == XKB_ATOM_NONE)
+         return -1;
+--- libxkbcommon-1.5.0/src/state.c~	2023-09-08 21:00:32.000000000 +0000
++++ libxkbcommon-1.5.0/src/state.c	2023-09-08 21:05:57.669161918 +0000
+@@ -591,6 +591,8 @@
+         return NULL;
+ 
+     ret->refcnt = 1;
++    if (!keymap)
++	return NULL;
+     ret->keymap = xkb_keymap_ref(keymap);
+ 
+     return ret;
+--- libxkbcommon-1.5.0/src/keymap.c~	2023-01-02 19:23:30.000000000 +0000
++++ libxkbcommon-1.5.0/src/keymap.c	2023-09-08 21:10:57.597361284 +0000
+@@ -286,6 +286,9 @@
+ {
+     xkb_atom_t atom;
+ 
++    if (!keymap)
++	return XKB_MOD_INVALID;
++
+     atom = xkb_atom_lookup(keymap->ctx, name);
+     if (atom == XKB_ATOM_NONE)
+         return XKB_MOD_INVALID;
+--- libxkbcommon-1.5.0/src/keymap.c~	2023-09-08 21:10:57.000000000 +0000
++++ libxkbcommon-1.5.0/src/keymap.c	2023-09-08 21:15:46.260569547 +0000
+@@ -58,6 +58,8 @@
+ XKB_EXPORT struct xkb_keymap *
+ xkb_keymap_ref(struct xkb_keymap *keymap)
+ {
++	if (!keymap)
++	return NULL;
+     keymap->refcnt++;
+     return keymap;
+ }
+--- libxkbcommon-1.5.0/src/keymap.c~	2023-09-08 21:15:46.000000000 +0000
++++ libxkbcommon-1.5.0/src/keymap.c	2023-09-08 21:18:22.944582333 +0000
+@@ -533,6 +533,9 @@
+ {
+     struct xkb_key *key;
+ 
++	if (!keymap)
++		return;
++
+     xkb_keys_foreach(key, keymap)
+         iter(keymap, key->keycode, data);
+ }
