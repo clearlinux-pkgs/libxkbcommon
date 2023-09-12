@@ -5,7 +5,7 @@
 #
 Name     : libxkbcommon
 Version  : 1.5.0
-Release  : 35
+Release  : 36
 URL      : https://xkbcommon.org/download/libxkbcommon-1.5.0.tar.xz
 Source0  : https://xkbcommon.org/download/libxkbcommon-1.5.0.tar.xz
 Summary  : No detailed summary available
@@ -97,6 +97,7 @@ Summary: lib components for the libxkbcommon package.
 Group: Libraries
 Requires: libxkbcommon-libexec = %{version}-%{release}
 Requires: libxkbcommon-license = %{version}-%{release}
+Requires: xkeyboard-config-data
 
 %description lib
 lib components for the libxkbcommon package.
@@ -152,7 +153,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1694208134
+export SOURCE_DATE_EPOCH=1694547291
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
