@@ -4,18 +4,20 @@
 # Using build pattern: meson
 #
 Name     : libxkbcommon
-Version  : 1.5.0
-Release  : 36
-URL      : https://xkbcommon.org/download/libxkbcommon-1.5.0.tar.xz
-Source0  : https://xkbcommon.org/download/libxkbcommon-1.5.0.tar.xz
+Version  : 1.6.0
+Release  : 37
+URL      : https://xkbcommon.org/download/libxkbcommon-1.6.0.tar.xz
+Source0  : https://xkbcommon.org/download/libxkbcommon-1.6.0.tar.xz
 Summary  : No detailed summary available
 Group    : Development/Tools
 License  : ICU
 Requires: libxkbcommon-bin = %{version}-%{release}
+Requires: libxkbcommon-data = %{version}-%{release}
 Requires: libxkbcommon-lib = %{version}-%{release}
 Requires: libxkbcommon-libexec = %{version}-%{release}
 Requires: libxkbcommon-license = %{version}-%{release}
 Requires: libxkbcommon-man = %{version}-%{release}
+BuildRequires : bash-completion-dev
 BuildRequires : bison
 BuildRequires : buildreq-meson
 BuildRequires : doxygen
@@ -24,11 +26,13 @@ BuildRequires : gcc-libgcc32
 BuildRequires : gcc-libstdc++32
 BuildRequires : glibc-dev32
 BuildRequires : glibc-libc32
+BuildRequires : graphviz
 BuildRequires : libX11-lib
 BuildRequires : libX11-lib32
 BuildRequires : pkgconfig(32libxml-2.0)
 BuildRequires : pkgconfig(32xcb)
 BuildRequires : pkgconfig(32xcb-xkb)
+BuildRequires : pkgconfig(bash-completion)
 BuildRequires : pkgconfig(libxml-2.0)
 BuildRequires : pkgconfig(xcb)
 BuildRequires : pkgconfig(xcb-xkb)
@@ -46,13 +50,14 @@ Patch1: crashavoid.patch
 %description
 # libxkbcommon
 libxkbcommon is a keyboard keymap compiler and support library which
-processes a reduced subset of keymaps as defined by the XKB (X Keyboard
+processes a reduced subset of keymaps as defined by the [XKB] \(X Keyboard
 Extension) specification.  It also contains a module for handling Compose
 and dead keys and a separate library for listing available keyboard layouts.
 
 %package bin
 Summary: bin components for the libxkbcommon package.
 Group: Binaries
+Requires: libxkbcommon-data = %{version}-%{release}
 Requires: libxkbcommon-libexec = %{version}-%{release}
 Requires: libxkbcommon-license = %{version}-%{release}
 
@@ -60,11 +65,20 @@ Requires: libxkbcommon-license = %{version}-%{release}
 bin components for the libxkbcommon package.
 
 
+%package data
+Summary: data components for the libxkbcommon package.
+Group: Data
+
+%description data
+data components for the libxkbcommon package.
+
+
 %package dev
 Summary: dev components for the libxkbcommon package.
 Group: Development
 Requires: libxkbcommon-lib = %{version}-%{release}
 Requires: libxkbcommon-bin = %{version}-%{release}
+Requires: libxkbcommon-data = %{version}-%{release}
 Provides: libxkbcommon-devel = %{version}-%{release}
 Requires: libxkbcommon = %{version}-%{release}
 
@@ -77,6 +91,7 @@ Summary: dev32 components for the libxkbcommon package.
 Group: Default
 Requires: libxkbcommon-lib32 = %{version}-%{release}
 Requires: libxkbcommon-bin = %{version}-%{release}
+Requires: libxkbcommon-data = %{version}-%{release}
 Requires: libxkbcommon-dev = %{version}-%{release}
 
 %description dev32
@@ -95,6 +110,7 @@ doc components for the libxkbcommon package.
 %package lib
 Summary: lib components for the libxkbcommon package.
 Group: Libraries
+Requires: libxkbcommon-data = %{version}-%{release}
 Requires: libxkbcommon-libexec = %{version}-%{release}
 Requires: libxkbcommon-license = %{version}-%{release}
 Requires: xkeyboard-config-data
@@ -106,6 +122,7 @@ lib components for the libxkbcommon package.
 %package lib32
 Summary: lib32 components for the libxkbcommon package.
 Group: Default
+Requires: libxkbcommon-data = %{version}-%{release}
 Requires: libxkbcommon-license = %{version}-%{release}
 
 %description lib32
@@ -138,14 +155,14 @@ man components for the libxkbcommon package.
 
 
 %prep
-%setup -q -n libxkbcommon-1.5.0
-cd %{_builddir}/libxkbcommon-1.5.0
+%setup -q -n libxkbcommon-1.6.0
+cd %{_builddir}/libxkbcommon-1.6.0
 %patch -P 1 -p1
 pushd ..
-cp -a libxkbcommon-1.5.0 build32
+cp -a libxkbcommon-1.6.0 build32
 popd
 pushd ..
-cp -a libxkbcommon-1.5.0 buildavx2
+cp -a libxkbcommon-1.6.0 buildavx2
 popd
 
 %build
@@ -153,25 +170,31 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1694547291
+export SOURCE_DATE_EPOCH=1696869256
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
-export FCFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
-export FFLAGS="$FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
-export CXXFLAGS="$CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
-CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" meson --libdir=lib64 --prefix=/usr --buildtype=plain   builddir
+CLEAR_INTERMEDIATE_CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+CLEAR_INTERMEDIATE_FCFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+CLEAR_INTERMEDIATE_FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+CLEAR_INTERMEDIATE_CXXFLAGS="$CLEAR_INTERMEDIATE_CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS"
+CXXFLAGS="$CLEAR_INTERMEDIATE_CXXFLAGS"
+FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
+FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
+ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
+LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
+meson --libdir=lib64 --prefix=/usr --buildtype=plain   builddir
 ninja -v -C builddir
 CFLAGS="$CFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 -O3" CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3 -Wl,-z,x86-64-v3 " LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3" meson --libdir=lib64 --prefix=/usr --buildtype=plain   builddiravx2
 ninja -v -C builddiravx2
 pushd ../build32/
 export PKG_CONFIG_PATH="/usr/lib32/pkgconfig:/usr/share/pkgconfig"
-export ASFLAGS="${ASFLAGS}${ASFLAGS:+ }--32"
-export CFLAGS="${CFLAGS}${CFLAGS:+ }-m32 -mstackrealign"
-export CXXFLAGS="${CXXFLAGS}${CXXFLAGS:+ }-m32 -mstackrealign"
-export LDFLAGS="${LDFLAGS}${LDFLAGS:+ }-m32 -mstackrealign"
+ASFLAGS="${CLEAR_INTERMEDIATE_ASFLAGS}${CLEAR_INTERMEDIATE_ASFLAGS:+ }--32"
+CFLAGS="${CLEAR_INTERMEDIATE_CFLAGS}${CLEAR_INTERMEDIATE_CFLAGS:+ }-m32 -mstackrealign"
+CXXFLAGS="${CLEAR_INTERMEDIATE_CXXFLAGS}${CLEAR_INTERMEDIATE_CXXFLAGS:+ }-m32 -mstackrealign"
+LDFLAGS="${CLEAR_INTERMEDIATE_LDFLAGS}${CLEAR_INTERMEDIATE_LDFLAGS:+ }-m32 -mstackrealign"
 meson --libdir=lib32 --prefix=/usr --buildtype=plain   builddir
 ninja -v -C builddir
 popd
@@ -186,6 +209,20 @@ cd ../build32;
 meson test -C builddir --print-errorlogs || :
 
 %install
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+CLEAR_INTERMEDIATE_CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+CLEAR_INTERMEDIATE_FCFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+CLEAR_INTERMEDIATE_FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+CLEAR_INTERMEDIATE_CXXFLAGS="$CLEAR_INTERMEDIATE_CXXFLAGS -O3 -fdebug-types-section -femit-struct-debug-baseonly -ffat-lto-objects -flto=auto -g1 -gno-column-info -gno-variable-location-views -gz=zstd "
+CFLAGS="$CLEAR_INTERMEDIATE_CFLAGS"
+CXXFLAGS="$CLEAR_INTERMEDIATE_CXXFLAGS"
+FFLAGS="$CLEAR_INTERMEDIATE_FFLAGS"
+FCFLAGS="$CLEAR_INTERMEDIATE_FCFLAGS"
+ASFLAGS="$CLEAR_INTERMEDIATE_ASFLAGS"
+LDFLAGS="$CLEAR_INTERMEDIATE_LDFLAGS"
 mkdir -p %{buildroot}/usr/share/package-licenses/libxkbcommon
 cp %{_builddir}/libxkbcommon-%{version}/LICENSE %{buildroot}/usr/share/package-licenses/libxkbcommon/3226d82e896c1428856ecbb68d3eb29cba7c4b19 || :
 pushd ../build32/
@@ -214,6 +251,10 @@ DESTDIR=%{buildroot} ninja -C builddir install
 %defattr(-,root,root,-)
 /V3/usr/bin/xkbcli
 /usr/bin/xkbcli
+
+%files data
+%defattr(-,root,root,-)
+/usr/share/bash-completion/completions/xkbcli
 
 %files dev
 %defattr(-,root,root,-)
