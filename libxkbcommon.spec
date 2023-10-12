@@ -5,7 +5,7 @@
 #
 Name     : libxkbcommon
 Version  : 1.6.0
-Release  : 37
+Release  : 38
 URL      : https://xkbcommon.org/download/libxkbcommon-1.6.0.tar.xz
 Source0  : https://xkbcommon.org/download/libxkbcommon-1.6.0.tar.xz
 Summary  : No detailed summary available
@@ -46,6 +46,7 @@ BuildRequires : wayland-protocols-dev32
 %define __strip /bin/true
 %define debug_package %{nil}
 Patch1: crashavoid.patch
+Patch2: german.patch
 
 %description
 # libxkbcommon
@@ -158,6 +159,7 @@ man components for the libxkbcommon package.
 %setup -q -n libxkbcommon-1.6.0
 cd %{_builddir}/libxkbcommon-1.6.0
 %patch -P 1 -p1
+%patch -P 2 -p1
 pushd ..
 cp -a libxkbcommon-1.6.0 build32
 popd
@@ -170,7 +172,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1696869256
+export SOURCE_DATE_EPOCH=1697135883
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
