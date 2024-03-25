@@ -1,13 +1,12 @@
-1.6.0
+1.7.0
 bash-completion-dev
 bison
-doxygen
-graphviz
-pkgconfig(32bash-completion)
+pkgconfig(32icu-uc)
 pkgconfig(32libxml-2.0)
 pkgconfig(32xcb)
 pkgconfig(32xcb-xkb)
 pkgconfig(bash-completion)
+pkgconfig(icu-uc)
 pkgconfig(libxml-2.0)
 pkgconfig(xcb)
 pkgconfig(xcb-xkb)
